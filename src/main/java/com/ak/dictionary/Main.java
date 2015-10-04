@@ -3,6 +3,7 @@ package com.ak.dictionary;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 public class Main {
 
@@ -60,9 +61,13 @@ public class Main {
         String fileName = generateFileName(directory, EXTENSION_TXT);
         Writer fileWriter = new BufferedWriter(new FileWriter(fileName, false));
         PrintWriter out = new PrintWriter(fileWriter);
+        out.println("Index:");
+        for (Map.Entry<String, Integer> entry : dictionary.getDocumentsMap().entrySet()) {
+            out.printf("Document name: %s; document index: %s%n", entry.getKey(), entry.getValue());
+        }
         out.printf("Dictionary size: %s word(s) %n %n", dictionary.getSize());
         for (String word : dictionary.getWords()) {
-            out.printf("%s : %n", word);
+            out.printf("%s : %s %n", word, dictionary.getIndex().get(word));
         }
         out.close();
 
