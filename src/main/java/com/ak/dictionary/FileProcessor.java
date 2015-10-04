@@ -13,7 +13,8 @@ import java.io.IOException;
 public class FileProcessor {
 
     public static final String[] EXTRA_SYMBOLS = new String[]{
-            System.lineSeparator(), ",", "(", ")", "{", "}", "\"", "'", "“", ";", "[", "]", "\t", "—", "!", ".", "#", "&", "?", "|", "//", "--"};
+            System.lineSeparator(), ",", "(", ")", "{", "}", "\"", "'", "“", ";",
+            "[", "]", "\t", "—", "!", ".", "#", "&", "?", "|", "//", "--", "*"};
     public static final String SPACE_SYMBOL = " ";
 
     private File[] files;

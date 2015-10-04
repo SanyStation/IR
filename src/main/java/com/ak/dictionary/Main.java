@@ -3,7 +3,6 @@ package com.ak.dictionary;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 public class Main {
 
