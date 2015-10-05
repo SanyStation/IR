@@ -4,6 +4,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 public class Main {
 
@@ -62,17 +63,16 @@ public class Main {
         Writer fileWriter = new BufferedWriter(new FileWriter(fileName, false));
         PrintWriter out = new PrintWriter(fileWriter);
         out.println("Index:");
-        for (Map.Entry<String, Integer> entry : dictionary.getDocumentsMap().entrySet()) {
+        for (Map.Entry<String, Integer> entry : dictionary.getDocumentsMap().entrySet())
             out.printf("Document name: %s; document index: %s%n", entry.getKey(), entry.getValue());
-        }
         out.printf("Dictionary size: %s word(s) %n %n", dictionary.getSize());
-        for (String word : dictionary.getWords()) {
-            out.printf("%s : %s %n", word, dictionary.getIndex().get(word));
-        }
+        Map<String, Set<Integer>> index = dictionary.getIndex();
+        for (String word : dictionary.getWords()) out.printf("%s : %s %n", word, index.get(word));
         out.close();
-
         File file = new File(fileName);
         System.out.println("Total file size " + Math.round((double) file.length() / KILOBYTE) + " KB");
+
+        System.out.println("Incedence Matrix: \n" + dictionary.getIncedenceMatrix().toString());
     }
 
     private static String generateFileName(String directory, String extension) {

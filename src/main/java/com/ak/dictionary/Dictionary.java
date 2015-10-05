@@ -10,6 +10,7 @@ public class Dictionary implements Serializable {
 
     public static final int DICTIONARY_INIT_SIZE = 10;
 
+    private IncedenceMatrix incedenceMatrix;
     private InvertedIndex invertedIndex = new InvertedIndex();
     private DocumentsMap documentsMap = new DocumentsMap();
     private String[] dictionary = new String[DICTIONARY_INIT_SIZE];
@@ -100,6 +101,11 @@ public class Dictionary implements Serializable {
 
     public Map<String, Integer> getDocumentsMap() {
         return documentsMap.getDocumentsMap();
+    }
+
+    public IncedenceMatrix getIncedenceMatrix() {
+        incedenceMatrix = new IncedenceMatrix(invertedIndex, documentsMap);
+        return incedenceMatrix;
     }
 
 }

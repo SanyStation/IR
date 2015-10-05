@@ -3,13 +3,14 @@ package com.ak.dictionary;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by olko06141 on 1.10.2015.
  */
 public class DocumentsMap implements Serializable {
 
-    private Map<String, Integer> map = new HashMap<>();
+    private Map<String, Integer> map = new TreeMap<>();
 
     public int addDocument(String fullName) {
         int index;
