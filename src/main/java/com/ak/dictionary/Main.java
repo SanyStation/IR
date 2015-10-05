@@ -69,10 +69,11 @@ public class Main {
         Map<String, Set<Integer>> index = dictionary.getIndex();
         for (String word : dictionary.getWords()) out.printf("%s : %s %n", word, index.get(word));
         out.close();
+
         File file = new File(fileName);
         System.out.println("Total file size " + Math.round((double) file.length() / KILOBYTE) + " KB");
-
-        System.out.println("Incedence Matrix: \n" + dictionary.getIncedenceMatrix().toString());
+        System.out.println("Matrix: ");
+        System.out.println(dictionary.getIncedenceMatrix());
     }
 
     private static String generateFileName(String directory, String extension) {

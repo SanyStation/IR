@@ -22,22 +22,27 @@ public class IncedenceMatrix {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         Formatter formatter = new Formatter(sb, Locale.US);
-
         StringBuilder format = new StringBuilder();
-        format.append("%1$20");
-        int i = 0;
-        Object[] args = new Object[documentsMap.size()];
+        format.append("%1$20s");
+        int i = 1;
+        Object[] docs = new Object[documentsMap.size() + 1];
+        Object[] args = new Object[documentsMap.size() + 1];
         for (Map.Entry<String, Integer> entry : documentsMap.entrySet()) {
-            format.append(" %").append(++i).append("$").append("5");
+            docs[i] = entry.getValue();
+            format.append(" %").append(++i).append("$").append("5s");
         }
-
+        docs[0] = "word \\ document";
+        formatter.format(format.append('\n').toString(), docs);
         for (Map.Entry<String, Set<Integer>> entry : index.entrySet()) {
-            formatter.format("%1$20s%n", entry.getKey());
-//            sb.append(entry.getKey()).append(" ");
-//            for (Integer docID : entry.getValue()) {
-//                sb.append(docID).append(" ");
-//            }
-//            sb.append("\n");
+            args[0] = entry.getKey();
+            for (int j = 1; j < documentsMap.size() + 1; ++j) {
+                if (entry.getValue().contains(docs[j])) {
+                    args[j] = 1;
+                } else {
+                    args[j] = 0;
+                }
+            }
+            formatter.format(format.toString(), args);
         }
         return sb.toString();
     }
