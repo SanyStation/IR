@@ -10,7 +10,6 @@ public class Dictionary implements Serializable {
 
     public static final int DICTIONARY_INIT_SIZE = 10;
 
-    private IncedenceMatrix incedenceMatrix;
     private InvertedIndex invertedIndex = new InvertedIndex();
     private DocumentsMap documentsMap = new DocumentsMap();
     private String[] dictionary = new String[DICTIONARY_INIT_SIZE];
@@ -57,19 +56,6 @@ public class Dictionary implements Serializable {
         sortDictionary();
         StringBuilder sb = new StringBuilder();
         sb.append("Dictionary size: " + index + " word(s)");
-//        sb.append("[");
-//        for (int i = 0; i < index; ++i) {
-//            if (i + 1 == index) {
-//                sb.append(dictionary[i]);
-//            } else {
-//                sb.append(dictionary[i]);
-//                sb.append(", ");
-//            }
-//
-//        }
-//        sb.append("]");
-//        sb.append("\n");
-//        sb.append("\n" + invertedIndex.toString());
         return sb.toString();
     }
 
@@ -101,11 +87,6 @@ public class Dictionary implements Serializable {
 
     public Map<String, Integer> getDocumentsMap() {
         return documentsMap.getDocumentsMap();
-    }
-
-    public IncedenceMatrix getIncedenceMatrix() {
-        incedenceMatrix = new IncedenceMatrix(invertedIndex, documentsMap);
-        return incedenceMatrix;
     }
 
 }
