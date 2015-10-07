@@ -12,6 +12,7 @@ public class Dictionary implements Serializable {
 
     private InvertedIndex invertedIndex = new InvertedIndex();
     private DocumentsMap documentsMap = new DocumentsMap();
+    private IncidenceMatrix incidenceMatrix;
     private String[] dictionary = new String[DICTIONARY_INIT_SIZE];
     private int index = 0;
 
@@ -40,6 +41,10 @@ public class Dictionary implements Serializable {
             return true;
         }
         return false;
+    }
+
+    public void buildIncidenceMatrix() {
+        incidenceMatrix = new IncidenceMatrix(invertedIndex, documentsMap);
     }
 
     private boolean findWord(String word) {

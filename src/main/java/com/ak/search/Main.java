@@ -20,9 +20,7 @@ public class Main {
                 System.out.println("Executing...");
                 dictionary = IOUtils.readDictionaryFromFile(args[1]);
                 System.out.println(dictionary.toString());
-            } else {
-                System.out.println("The first argument should be '-f' (That means FILE. It's serialized dictionary)");
-            }
+            } else System.out.println("The first argument should be '-f' (That means FILE. It's serialized dictionary)");
             String thirdArg = args[2];
             DocumentSearcher documentSearcher = new DocumentSearcher(dictionary);
             if ("-w".equals(thirdArg)) {
