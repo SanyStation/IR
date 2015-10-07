@@ -5,7 +5,6 @@ import com.ak.utils.IOUtils;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Created by olko06141 on 6.10.2015.
@@ -31,7 +30,7 @@ public class Main {
                 System.out.println("The word '" + args[3] + "' is found in the following documents: ");
                 documents.forEach(System.out::println);
             }
-            else System.out.println("The third argument should be '-w' (That means WORD that you want to find in the documents)");
+            else System.out.println("The third argument should be '-w' (That means WORD(s) that you want to find in the documents). For example, -w \"one two !three\"");
         } else {
             System.out.println("There should be passed 4 arguments into the application (For example, '-f c:/Documents/dictionary.out -w hello'). The application will be closed.");
         }

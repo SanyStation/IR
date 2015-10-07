@@ -1,49 +1,67 @@
 package com.ak.dictionary;
 
-import java.util.Formatter;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import com.sun.istack.internal.NotNull;
+
+import java.util.*;
 
 /**
  * Created by olko06141 on 1.10.2015.
  */
 public class IncedenceMatrix {
 
+    public static final int ZERO = 0;
+    public static final int ONE = 1;
+
+    private static class Entry<W, A> {
+
+        W word;
+        A docIDs;
+
+        private Entry(W word, A docIDs) {
+            this.word = word;
+            this.docIDs = docIDs;
+        }
+    }
+
     private Map<String, Set<Integer>> index;
     private Map<String, Integer> documentsMap;
+    private TreeSet<Entry<String, Integer[]>> matrix = new TreeSet<>();
 
     public IncedenceMatrix(InvertedIndex index, DocumentsMap documentsMap) {
         this.index = index.getIndex();
         this.documentsMap = documentsMap.getDocumentsMap();
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        Formatter formatter = new Formatter(sb, Locale.US);
-        StringBuilder format = new StringBuilder();
-        format.append("%1$20s");
-        int i = 1;
-        Object[] docs = new Object[documentsMap.size() + 1];
-        Object[] args = new Object[documentsMap.size() + 1];
-        for (Map.Entry<String, Integer> entry : documentsMap.entrySet()) {
-            docs[i] = entry.getValue();
-            format.append(" %").append(++i).append("$").append("5s");
-        }
-        docs[0] = "word \\ document";
-        formatter.format(format.append('\n').toString(), docs);
-        for (Map.Entry<String, Set<Integer>> entry : index.entrySet()) {
-            args[0] = entry.getKey();
-            for (int j = 1; j < documentsMap.size() + 1; ++j) {
-                if (entry.getValue().contains(docs[j])) {
-                    args[j] = 1;
-                } else {
-                    args[j] = 0;
-                }
+    public boolean addWord(String word) {
+        if (!matrix.contains(word) && index.containsValue(word)) {
+            Set<Integer> docIDs = index.get(word);
+            Integer[] docArray = new Integer[documentsMap.size()];
+            for (int i = 0; i < docArray.length; ++i) {
+                if (docIDs.contains(i)) docArray[i] = 1;
+                else docArray[i] = 0;
             }
-            formatter.format(format.toString(), args);
-        }
-        return sb.toString();
+            matrix.add(new Entry<>(word, docArray));
+            return true;
+        } else
+            return false;
     }
+
+    public int[] calculateBineryDocuments(String sentence) {
+        String[] words = sentence.split(FileProcessor.SPACE_SYMBOL);
+        for (String word : words) {
+
+        }
+        return null;
+    }
+
+    private Integer[] getBinaryArray(String word) {
+        return null;
+    }
+
+    private Integer[] invertBinaryArray(@NotNull Integer[] array) {
+        Integer[] result = new Integer[array.length];
+        for (int i = 0; i < array.length; ++i) result[i] = array[i].equals(ONE) ? ZERO : ONE;
+        return result;
+    }
+
 }
