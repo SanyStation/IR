@@ -1,6 +1,8 @@
 package com.ak.utils;
 
 import com.ak.dictionary.Dictionary;
+import com.ak.dictionary.IncidenceMatrix;
+import com.ak.dictionary.InvertedIndex;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -22,7 +24,7 @@ public class IOUtils {
         directory = normalizeAddress(directory);
         serializeDictionary(dictionary, directory);
         saveToTextFileDictionary(dictionary, directory);
-        saveToTextFileIncidenceMatrix(dictionary, directory);
+        saveToTextFileIncidenceMatrix(dictionary.getIncidenceMatrix(), directory);
     }
 
     private static void serializeDictionary(Dictionary dictionary, String directory) throws IOException {
@@ -65,14 +67,14 @@ public class IOUtils {
         return address;
     }
 
-    public static void saveToTextFileIncidenceMatrix(Dictionary dictionary, String directory) throws IOException {
+    public static void saveToTextFileIncidenceMatrix(IncidenceMatrix matrix, String directory) throws IOException {
         String fileName = generateFileName(directory, TYPE_MATRIX, EXTENSION_TXT);
         Writer fileWriter = new BufferedWriter(new java.io.FileWriter(fileName, false));
-        Map<String, Set<Integer>> index = dictionary.getIndex();
-        Map<String, Integer> documentsMap = dictionary.getDocumentsMap();
+        Map<String, Set<Integer>> index = matrix.getIndex();
+        Map<String, Integer> documentsMap = matrix.getDocumentsMap();
         PrintWriter out = new PrintWriter(fileWriter);
         out.println("Index:");
-        for (Map.Entry<String, Integer> entry : dictionary.getDocumentsMap().entrySet())
+        for (Map.Entry<String, Integer> entry : documentsMap.entrySet())
             out.printf("Document name: %s; document index: %s%n", entry.getKey(), entry.getValue());
         StringBuilder format = new StringBuilder();
         format.append("%1$20s |");
@@ -81,7 +83,7 @@ public class IOUtils {
         Object[] args = new Object[documentsMap.size() + 1];
         for (Map.Entry<String, Integer> entry : documentsMap.entrySet()) {
             docs[i] = entry.getValue();
-            format.append(" %").append(++i).append("$").append("5s |");
+            format.append(" %").append(++i).append("$5s |");
         }
         docs[0] = "word \\ document";
         out.format(format.append('\n').toString(), docs);

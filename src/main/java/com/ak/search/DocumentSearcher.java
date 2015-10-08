@@ -1,6 +1,7 @@
 package com.ak.search;
 
 import com.ak.dictionary.Dictionary;
+import com.ak.dictionary.IncidenceMatrix;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -13,22 +14,19 @@ import java.util.stream.Collectors;
  */
 public class DocumentSearcher {
 
-    private Dictionary dictionary;
+    private IncidenceMatrix matrix;
 
-    public DocumentSearcher(Dictionary dictionary) {
-        this.dictionary = dictionary;
+    public DocumentSearcher(IncidenceMatrix matrix) {
+        this.matrix = matrix;
     }
 
-    public Set<Integer> findDocumentIndexes(String word) {
-        return dictionary.getIndex().getOrDefault(word, new TreeSet<>());
-    }
-
-    public Set<String> findDocuments(String word) {
-        Set<Integer> docIDs = findDocumentIndexes(word);
-        Set<String> docs = new HashSet<>();
-        Map<String, Integer> documentsMap =  dictionary.getDocumentsMap();
-        docs.addAll(documentsMap.entrySet().stream().filter(entry -> docIDs.contains(entry.getValue())).map(Map.Entry::getKey).collect(Collectors.toList()));
-        return docs;
+    public Set<String> findDocuments(String sentence) {
+        return matrix.getDocuments(sentence);
+//        Set<Integer> docIDs = findDocumentIndexes(word);
+//        Set<String> docs = new HashSet<>();
+//        Map<String, Integer> documentsMap =  dictionary.getDocumentsMap();
+//        docs.addAll(documentsMap.entrySet().stream().filter(entry -> docIDs.contains(entry.getValue())).map(Map.Entry::getKey).collect(Collectors.toList()));
+//        return docs;
     }
 
 }

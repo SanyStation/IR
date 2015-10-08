@@ -47,6 +47,13 @@ public class Dictionary implements Serializable {
         incidenceMatrix = new IncidenceMatrix(invertedIndex, documentsMap);
     }
 
+    public IncidenceMatrix getIncidenceMatrix() {
+        if (incidenceMatrix == null) {
+            buildIncidenceMatrix();
+        }
+        return incidenceMatrix;
+    }
+
     private boolean findWord(String word) {
         for (int i = 0; i < index; ++i) {
             if (dictionary[i].equals(word)) {

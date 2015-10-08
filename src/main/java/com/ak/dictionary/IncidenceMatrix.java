@@ -2,12 +2,13 @@ package com.ak.dictionary;
 
 import com.sun.istack.internal.NotNull;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Created by olko06141 on 1.10.2015.
  */
-public class IncidenceMatrix {
+public class IncidenceMatrix implements Serializable {
 
     public static final int ZERO = 0;
     public static final int ONE = 1;
@@ -23,8 +24,20 @@ public class IncidenceMatrix {
         for (Map.Entry<String, Set<Integer>> entry : this.index.entrySet()) addWord(entry.getKey());
     }
 
-    public boolean addWord(String word) {
-        if (!matrix.containsKey(word) && index.containsValue(word)) {
+    public TreeMap<String, Integer[]> getMatrix() {
+        return new TreeMap<>(matrix);
+    }
+
+    public Map<String, Set<Integer>> getIndex() {
+        return new TreeMap<>(index);
+    }
+
+    public Map<String, Integer> getDocumentsMap() {
+        return new TreeMap<>(documentsMap);
+    }
+
+    private boolean addWord(String word) {
+        if (!matrix.containsKey(word)) {
             Set<Integer> docIDs = index.get(word);
             Integer[] docArray = new Integer[documentsMap.size()];
             for (int i = 0; i < docArray.length; ++i) {
