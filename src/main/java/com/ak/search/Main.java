@@ -17,16 +17,18 @@ public class Main {
         if (args.length == 4) {
             String firstArg = args[0];
             if ("-f".equals(firstArg)) {
-                System.out.println("Executing...");
+                System.out.println("Unpacking...");
                 dictionary = IOUtils.readDictionaryFromFile(args[1]);
+                System.out.println("Unpacking finished");
                 System.out.println(dictionary.toString());
             } else System.out.println("The first argument should be '-f' (That means FILE. It's serialized dictionary)");
             String thirdArg = args[2];
             DocumentSearcher documentSearcher = new DocumentSearcher(dictionary.getIncidenceMatrix());
             if ("-w".equals(thirdArg)) {
                 Set<String> documents = documentSearcher.findDocuments(args[3]);
-                System.out.println("The sentence '" + args[3] + "' is found in the following documents: ");
-                documents.forEach(System.out::println);
+                System.out.println("The words '" + args[3] + "' are found in the following documents: ");
+                if (documents.size() > 0) documents.forEach(System.out::println);
+                else System.out.println("There are not such documents");
             }
             else System.out.println("The third argument should be '-w' (That means WORD(s) that you want to find in the documents). For example, -w \"one two !three\"");
         } else {

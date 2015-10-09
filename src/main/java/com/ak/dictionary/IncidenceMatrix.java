@@ -1,7 +1,5 @@
 package com.ak.dictionary;
 
-import com.sun.istack.internal.NotNull;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -9,6 +7,8 @@ import java.util.*;
  * Created by olko06141 on 1.10.2015.
  */
 public class IncidenceMatrix implements Serializable {
+
+    private static final long serialVersionUID = -2728255565587517055L;
 
     public static final int ZERO = 0;
     public static final int ONE = 1;
@@ -41,7 +41,7 @@ public class IncidenceMatrix implements Serializable {
             Set<Integer> docIDs = index.get(word);
             Integer[] docArray = new Integer[documentsMap.size()];
             for (int i = 0; i < docArray.length; ++i) {
-                if (docIDs.contains(i)) docArray[i] = ONE;
+                if (docIDs.contains(i + 1)) docArray[i] = ONE;
                 else docArray[i] = ZERO;
             }
             matrix.put(word, docArray);
@@ -56,7 +56,7 @@ public class IncidenceMatrix implements Serializable {
         for (int i = 0; i < docArray.length; ++i) {
             if (docArray[i].equals(ONE)) {
                 for (Map.Entry<String, Integer> entry : documentsMap.entrySet()) {
-                    if (entry.getValue().equals(i)) documents.add(entry.getKey());
+                    if (entry.getValue().equals(i + 1)) documents.add(entry.getKey());
                 }
             }
         }
@@ -66,10 +66,9 @@ public class IncidenceMatrix implements Serializable {
     private Integer[] calculateBinaryDocuments(String sentence) {
         String[] words = sentence.split(FileProcessor.SPACE_SYMBOL);
         Integer[] array = invertBitArray(getBitArray(NOT));
-        for (String word : words) {
+        for (String word : words)
             if (!word.contains(NOT)) array = bitwiseOperationAND(array, getBitArray(word));
-            else array = bitwiseOperationAND(array, invertBitArray(getBitArray(word)));
-        }
+            else array = bitwiseOperationAND(array, invertBitArray(getBitArray(word.replace(NOT, ""))));
         return array;
     }
 
@@ -83,13 +82,14 @@ public class IncidenceMatrix implements Serializable {
     }
 
     private Integer[] getBitArray(String word) {
+        Integer[] res = matrix.get(word);
         Integer[] result = new Integer[documentsMap.size()];
         if (matrix.containsKey(word)) result = matrix.get(word);
         else for (int i = 0; i < result.length; ++i) result[i] = ZERO;
         return result;
     }
 
-    private Integer[] invertBitArray(@NotNull Integer[] array) {
+    private Integer[] invertBitArray(Integer[] array) {
         Integer[] result = new Integer[array.length];
         for (int i = 0; i < array.length; ++i) result[i] = array[i].equals(ONE) ? ZERO : ONE;
         return result;

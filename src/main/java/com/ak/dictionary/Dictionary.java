@@ -8,6 +8,8 @@ import java.util.*;
  */
 public class Dictionary implements Serializable {
 
+    private static final long serialVersionUID = -6930522145462340882L;
+
     public static final int DICTIONARY_INIT_SIZE = 10;
 
     private InvertedIndex invertedIndex = new InvertedIndex();

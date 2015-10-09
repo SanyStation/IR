@@ -11,6 +11,8 @@ import java.util.TreeSet;
  */
 public class InvertedIndex implements Serializable {
 
+    private static final long serialVersionUID = 3976755596080851301L;
+    
     private Map<String, Set<Integer>> documentIndex = new TreeMap<>();
 
     public boolean updateIndex(String word, int docIndex) {

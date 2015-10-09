@@ -10,6 +10,8 @@ import java.util.TreeMap;
  */
 public class DocumentsMap implements Serializable {
 
+    private static final long serialVersionUID = 4875130577590892949L;
+
     private Map<String, Integer> map = new TreeMap<>();
 
     public int addDocument(String fullName) {
