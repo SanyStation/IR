@@ -38,8 +38,7 @@ public class IOUtils {
 
     public static void saveToTextFileDictionary(Dictionary dictionary, String directory) throws IOException {
         String fileName = generateFileName(directory, TYPE_DICTIONARY, EXTENSION_TXT);
-        Writer fileWriter = new BufferedWriter(new java.io.FileWriter(fileName, false));
-        PrintWriter out = new PrintWriter(fileWriter);
+        PrintWriter out = new PrintWriter(new BufferedWriter(new java.io.FileWriter(fileName, false)));
         out.println("Index:");
         for (Map.Entry<String, Integer> entry : dictionary.getDocumentsMap().entrySet())
             out.printf("Document name: %s; document index: %s%n", entry.getKey(), entry.getValue());

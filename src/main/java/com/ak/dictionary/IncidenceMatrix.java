@@ -1,5 +1,7 @@
 package com.ak.dictionary;
 
+import com.ak.utils.FileProcessor;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -21,7 +23,7 @@ public class IncidenceMatrix implements Serializable {
     public IncidenceMatrix(InvertedIndex index, DocumentsMap documentsMap) {
         this.index = index.getIndex();
         this.documentsMap = documentsMap.getDocumentsMap();
-        for (Map.Entry<String, Set<Integer>> entry : this.index.entrySet()) addWord(entry.getKey());
+        for (Map.Entry<String, Set<Integer>> entry : this.index.entrySet()) updateIndex(entry.getKey());
     }
 
     public TreeMap<String, Integer[]> getMatrix() {
@@ -36,7 +38,7 @@ public class IncidenceMatrix implements Serializable {
         return new TreeMap<>(documentsMap);
     }
 
-    private boolean addWord(String word) {
+    private boolean updateIndex(String word) {
         if (!matrix.containsKey(word)) {
             Set<Integer> docIDs = index.get(word);
             Integer[] docArray = new Integer[documentsMap.size()];
@@ -50,7 +52,7 @@ public class IncidenceMatrix implements Serializable {
             return false;
     }
 
-    public Set<String> getDocuments(String sentence) {
+    public Set<String> findDocuments(String sentence) {
         Set<String> documents = new TreeSet<>();
         Integer[] docArray = calculateBinaryDocuments(sentence);
         for (int i = 0; i < docArray.length; ++i) {
@@ -82,7 +84,6 @@ public class IncidenceMatrix implements Serializable {
     }
 
     private Integer[] getBitArray(String word) {
-        Integer[] res = matrix.get(word);
         Integer[] result = new Integer[documentsMap.size()];
         if (matrix.containsKey(word)) result = matrix.get(word);
         else for (int i = 0; i < result.length; ++i) result[i] = ZERO;

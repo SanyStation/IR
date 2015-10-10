@@ -29,11 +29,11 @@ public class Dictionary implements Serializable {
         for (String word : arrayOfWords) addWord(word, docIndex);
     }
 
-    public boolean addWord(String word, int docIndex) {
+    public boolean addWord(String word, int docID) {
         if (word == null) return false;
         word = normalize(word);
         if (word.isEmpty()) return false;
-        invertedIndex.updateIndex(word, docIndex);
+        invertedIndex.updateIndex(word, docID);
         if (!findWord(word)) {
             if (index >= dictionary.length) {
                 increaseDictionarySize();

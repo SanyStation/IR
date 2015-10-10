@@ -1,5 +1,6 @@
-package com.ak.dictionary;
+package com.ak.utils;
 
+import com.ak.dictionary.Dictionary;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
