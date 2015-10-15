@@ -1,6 +1,6 @@
-package com.ak.dictionary;
+package com.ak.ir;
 
-import com.ak.utils.IOUtils;
+import com.ak.ir.utils.IOUtils;
 
 import java.io.*;
 

@@ -1,7 +1,7 @@
-package com.ak.dictionary;
+package com.ak.ir.dictionary;
 
-import com.ak.utils.FileProcessor;
-import com.ak.utils.IOUtils;
+import com.ak.ir.utils.IOUtils;
+
 import java.io.IOException;
 
 public class Main {
@@ -14,11 +14,11 @@ public class Main {
             if ("-d".equals(firstArg)) {
                 System.out.println("Executing...");
                 long lStartTime = System.nanoTime();
-                int documents = new FileProcessor().processFiles(args[1], dictionary);
+//                int documents = new FileProcessor().processFiles(args[1], dictionary);
                 long lEndTime = System.nanoTime();
                 long difference = lEndTime - lStartTime;
                 System.out.println("Elapsed time: " + difference / IOUtils.MILLISECONDS + " ms");
-                System.out.println("Document(s): " + documents);
+//                System.out.println("Document(s): " + documents);
                 System.out.println(dictionary.toString());
             } else {
                 System.out.println("The first argument should be '-d' (That means DIRECTORY)");

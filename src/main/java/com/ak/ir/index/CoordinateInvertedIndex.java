@@ -1,4 +1,4 @@
-package com.ak.dictionary;
+package com.ak.ir.index;
 
 import java.io.Serializable;
 import java.util.*;
@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class CoordinateInvertedIndex implements Index, Serializable {
 
-    //TODO put UID
+    private static final long serialVersionUID = -1702944676201321708L;
 
     private Map<String, Map<Integer, Set<Integer>>> index = new TreeMap<>();
 
@@ -56,7 +56,8 @@ public class CoordinateInvertedIndex implements Index, Serializable {
             Set<Integer> positions2 = map2.get(docID);
             Iterator<Integer> iterator1 = positions1.iterator();
             Iterator<Integer> iterator2 = positions2.iterator();
-            outer: while (iterator1.hasNext()) {
+            outer:
+            while (iterator1.hasNext()) {
                 Integer value1 = iterator1.next();
                 while (iterator2.hasNext()) {
                     Integer value2 = iterator2.next();

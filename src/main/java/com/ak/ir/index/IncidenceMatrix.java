@@ -1,21 +1,23 @@
-package com.ak.dictionary;
+package com.ak.ir.index;
 
-import com.ak.utils.FileProcessor;
+import com.ak.ir.DocumentsMap;
+import com.ak.ir.utils.IRUtils;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Created by olko06141 on 1.10.2015.
  */
 public class IncidenceMatrix implements Serializable {
 
-    private static final long serialVersionUID = -2728255565587517055L;
-
     public static final int ZERO = 0;
     public static final int ONE = 1;
     public static final String NOT = "!";
-
+    private static final long serialVersionUID = -2728255565587517055L;
     private Map<String, Set<Integer>> index;
     private Map<String, Integer> documentsMap;
     private TreeMap<String, Integer[]> matrix = new TreeMap<>();
@@ -66,7 +68,7 @@ public class IncidenceMatrix implements Serializable {
     }
 
     private Integer[] calculateBinaryDocuments(String sentence) {
-        String[] words = sentence.split(FileProcessor.SPACE_SYMBOL);
+        String[] words = sentence.split(IRUtils.SPACE_SYMBOL);
         Integer[] array = invertBitArray(getBitArray(NOT));
         for (String word : words)
             if (!word.contains(NOT)) array = bitwiseOperationAND(array, getBitArray(word));

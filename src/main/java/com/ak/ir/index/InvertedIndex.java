@@ -1,4 +1,4 @@
-package com.ak.dictionary;
+package com.ak.ir.index;
 
 import java.io.Serializable;
 import java.util.*;
@@ -9,7 +9,7 @@ import java.util.*;
 public class InvertedIndex implements Index, Serializable {
 
     private static final long serialVersionUID = 3976755596080851301L;
-    
+
     private Map<String, Set<Integer>> index = new TreeMap<>();
 
     public boolean updateIndex(String word, int docID) {

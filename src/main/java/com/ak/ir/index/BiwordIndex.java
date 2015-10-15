@@ -1,4 +1,6 @@
-package com.ak.dictionary;
+package com.ak.ir.index;
+
+import com.ak.ir.SavableReadable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

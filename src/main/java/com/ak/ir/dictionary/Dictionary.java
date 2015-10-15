@@ -1,9 +1,12 @@
-package com.ak.dictionary;
+package com.ak.ir.dictionary;
 
-import com.ak.utils.IRUtils;
+import com.ak.ir.SavableReadable;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Created by olko06141 on 20.9.2015.
@@ -11,10 +14,9 @@ import java.util.*;
 public class Dictionary extends SavableReadable {
 
     private static final long serialVersionUID = -6930522145462340882L;
-
+    
     public static final int DICTIONARY_INIT_SIZE = 10;
-
-    protected String fileType = "dictionary";
+    public static final String FILE_TYPE = "dictionary";
     private String[] dictionary = new String[DICTIONARY_INIT_SIZE];
     private int position = 0;
 
@@ -24,13 +26,12 @@ public class Dictionary extends SavableReadable {
         dictionary = newDictionary;
     }
 
-    public void addArrayOfWords(String[] arrayOfWords) {
-        for (String word : arrayOfWords) addWord(word);
+    public void addArrayOfWords(Collection<String> arrayOfWords) {
+        arrayOfWords.forEach(this::addWord);
     }
 
     public boolean addWord(String word) {
-        word = IRUtils.normalize(word);
-        if (word.isEmpty()) return false;
+        if (word != null && word.isEmpty()) return false;
         if (!isWordFound(word)) {
             if (position >= dictionary.length) {
                 increaseDictionarySize();
@@ -78,7 +79,7 @@ public class Dictionary extends SavableReadable {
 
     @Override
     protected String getFileType() {
-        return fileType;
+        return FILE_TYPE;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.ak.dictionary;
+package com.ak.ir.index;
 
 import java.util.List;
 import java.util.Set;

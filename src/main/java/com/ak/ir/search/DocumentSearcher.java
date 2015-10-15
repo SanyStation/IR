@@ -1,13 +1,8 @@
-package com.ak.search;
+package com.ak.ir.search;
 
-import com.ak.dictionary.Dictionary;
-import com.ak.dictionary.IncidenceMatrix;
+import com.ak.ir.index.IncidenceMatrix;
 
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 /**
  * Created by olko06141 on 6.10.2015.

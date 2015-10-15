@@ -1,11 +1,13 @@
-package com.ak.utils;
+package com.ak.ir.utils;
 
-import com.ak.dictionary.IncidenceMatrix;
-import com.ak.dictionary.SavableReadable;
+import com.ak.ir.SavableReadable;
+import com.ak.ir.index.IncidenceMatrix;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by olko06141 on 6.10.2015.
