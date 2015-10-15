@@ -1,22 +1,22 @@
 package com.ak.dictionary;
 
-import java.io.Serializable;
+import com.ak.utils.IRUtils;
+
+import java.io.*;
 import java.util.*;
 
 /**
  * Created by olko06141 on 20.9.2015.
  */
-public class Dictionary implements Serializable {
+public class Dictionary extends SavableReadable {
 
     private static final long serialVersionUID = -6930522145462340882L;
 
     public static final int DICTIONARY_INIT_SIZE = 10;
 
-    private InvertedIndex invertedIndex = new InvertedIndex();
-    private DocumentsMap documentsMap = new DocumentsMap();
-    private IncidenceMatrix incidenceMatrix;
+    protected String fileType = "dictionary";
     private String[] dictionary = new String[DICTIONARY_INIT_SIZE];
-    private int index = 0;
+    private int position = 0;
 
     private void increaseDictionarySize() {
         String[] newDictionary = new String[dictionary.length * 3 / 2 + 1];
@@ -24,40 +24,26 @@ public class Dictionary implements Serializable {
         dictionary = newDictionary;
     }
 
-    public void addArrayOfWords(String[] arrayOfWords, String documentName) {
-        int docIndex =  documentsMap.addDocument(documentName);
-        for (String word : arrayOfWords) addWord(word, docIndex);
+    public void addArrayOfWords(String[] arrayOfWords) {
+        for (String word : arrayOfWords) addWord(word);
     }
 
-    public boolean addWord(String word, int docID) {
-        if (word == null) return false;
-        word = normalize(word);
+    public boolean addWord(String word) {
+        word = IRUtils.normalize(word);
         if (word.isEmpty()) return false;
-        invertedIndex.updateIndex(word, docID);
-        if (!findWord(word)) {
-            if (index >= dictionary.length) {
+        if (!isWordFound(word)) {
+            if (position >= dictionary.length) {
                 increaseDictionarySize();
             }
-            dictionary[index] = word;
-            ++index;
+            dictionary[position] = word;
+            ++position;
             return true;
         }
         return false;
     }
 
-    public void buildIncidenceMatrix() {
-        incidenceMatrix = new IncidenceMatrix(invertedIndex, documentsMap);
-    }
-
-    public IncidenceMatrix getIncidenceMatrix() {
-        if (incidenceMatrix == null) {
-            buildIncidenceMatrix();
-        }
-        return incidenceMatrix;
-    }
-
-    private boolean findWord(String word) {
-        for (int i = 0; i < index; ++i) {
+    private boolean isWordFound(String word) {
+        for (int i = 0; i < position; ++i) {
             if (dictionary[i].equals(word)) {
                 return true;
             }
@@ -67,40 +53,36 @@ public class Dictionary implements Serializable {
 
     @Override
     public String toString() {
-        sortDictionary();
-        StringBuilder sb = new StringBuilder();
-        sb.append("Dictionary size: " + index + " word(s)");
-        return sb.toString();
+        return "Dictionary size: " + getSize() + " word(s)";
     }
 
     public String[] getWords() {
         sortDictionary();
-        String[] newArray = new String[index];
-        System.arraycopy(dictionary, 0, newArray, 0, index);
+        String[] newArray = new String[position];
+        System.arraycopy(dictionary, 0, newArray, 0, position);
         return newArray;
     }
 
-    private String normalize(String word) {
-        if (word.endsWith(".") || word.endsWith(":")) {
-            word = word.substring(0, word.length() - 1);
-        }
-        return word.toLowerCase();
-    }
-
     public void sortDictionary() {
-        Arrays.sort(dictionary, 0, index, (o1, o2) -> o1.compareTo(o2));
+        Arrays.sort(dictionary, 0, position, (o1, o2) -> o1.compareTo(o2));
     }
 
     public int getSize() {
-        return index;
+        return position;
     }
 
-    public Map<String, Set<Integer>> getIndex() {
-        return invertedIndex.getIndex();
+    @Override
+    protected void writeTo(PrintWriter printWriter) {
+        for (String word : getWords()) printWriter.printf("%1s%n", word);
     }
 
-    public Map<String, Integer> getDocumentsMap() {
-        return documentsMap.getDocumentsMap();
+    @Override
+    protected String getFileType() {
+        return fileType;
     }
 
+    @Override
+    protected Dictionary readFrom(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        return (Dictionary) ois.readObject();
+    }
 }

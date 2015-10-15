@@ -18,21 +18,13 @@ public class FileProcessor {
             "[", "]", "\t", "—", "!", ".", "#", "&", "?", "|", "//", "--", "*", "\n", "\r"};
     public static final String SPACE_SYMBOL = " ";
 
-    private File[] files;
-    private Dictionary dictionary;
-
-    public FileProcessor(String directory, Dictionary dictionary) {
+    public int processFiles(String directory, Dictionary dictionary) {
         File dir = new File(directory);
         if (!dir.isDirectory()) {
             throw new RuntimeException("There is no such directory '" + dir + "'");
         }
-        files = dir.listFiles();
-        this.dictionary = dictionary;
-    }
-
-    public int processFiles() {
         int fileCounter = 0;
-        for (File file : files) {
+        for (File file : dir.listFiles()) {
             ++fileCounter;
             try (FileInputStream inputStream = new FileInputStream(file)) {
                 String fileInString = IOUtils.toString(inputStream);
@@ -40,7 +32,7 @@ public class FileProcessor {
                     fileInString = fileInString.replace(symbol, SPACE_SYMBOL);
                 }
                 String[] arrayOfWords = fileInString.split(SPACE_SYMBOL);
-                dictionary.addArrayOfWords(arrayOfWords, file.getName());
+                dictionary.addArrayOfWords(arrayOfWords);
             } catch (FileNotFoundException e) {
                 System.out.println("File " + file.getName() + " wasn't found");
                 e.printStackTrace();

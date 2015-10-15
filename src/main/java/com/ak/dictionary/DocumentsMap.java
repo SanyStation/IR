@@ -1,6 +1,8 @@
 package com.ak.dictionary;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -8,11 +10,12 @@ import java.util.TreeMap;
 /**
  * Created by olko06141 on 1.10.2015.
  */
-public class DocumentsMap implements Serializable {
+public class DocumentsMap extends SavableReadable {
 
     private static final long serialVersionUID = 4875130577590892949L;
 
     private Map<String, Integer> map = new TreeMap<>();
+    protected String fileType = "docmap";
 
     public int addDocument(String fullName) {
         int index;
@@ -24,7 +27,6 @@ public class DocumentsMap implements Serializable {
             index = map.size() + 1;
             if (value == null) map.put(fullName, index);
         }
-        System.out.println("File name = " + fullName + "; index = " + index);
         return index;
     }
 
@@ -34,7 +36,22 @@ public class DocumentsMap implements Serializable {
 
     @Override
     public String toString() {
-        return "DocumentList{list = " + map + "}";
+        return "DocumentsMap size: " + map.size() + " word(s)";
     }
 
+    @Override
+    protected void writeTo(PrintWriter printWriter) {
+        for (Map.Entry<String, Integer> entry : map.entrySet())
+            printWriter.printf("%5d : %s%n", entry.getValue(), entry.getKey());
+    }
+
+    @Override
+    protected String getFileType() {
+        return fileType;
+    }
+
+    @Override
+    protected DocumentsMap readFrom(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        return (DocumentsMap) ois.readObject();
+    }
 }

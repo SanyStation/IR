@@ -1,14 +1,16 @@
 package com.ak.dictionary;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
  * Created by sanystation on 11/10/15.
  */
-public class BiwordIndex implements Index, Serializable {
+public class BiwordIndex extends SavableReadable implements Index {
 
-    //TODO put UID
+    private static final long serialVersionUID = -7002992778540492459L;
 
     private Map<String, Set<Integer>> index = new TreeMap<>();
 
@@ -28,5 +30,20 @@ public class BiwordIndex implements Index, Serializable {
     @Override
     public Set<Integer> findDocumentSet(List<String> sentence) {
         return new TreeSet<>(index.get(sentence.get(0)));
+    }
+
+    @Override
+    protected void writeTo(PrintWriter printWriter) {
+
+    }
+
+    @Override
+    protected String getFileType() {
+        return null;
+    }
+
+    @Override
+    protected Object readFrom(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        return null;
     }
 }

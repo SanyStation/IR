@@ -1,8 +1,7 @@
 package com.ak.utils;
 
-import com.ak.dictionary.Dictionary;
 import com.ak.dictionary.IncidenceMatrix;
-import com.ak.dictionary.InvertedIndex;
+import com.ak.dictionary.SavableReadable;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -14,44 +13,26 @@ import java.util.*;
 public class IOUtils {
 
     public static final String DATE_MASK = "dd.MM.yyyy_HH.mm.ss";
-    public static final String EXTENSION_TXT = "txt";
-    public static final String EXTENSION_OUT = "out";
-    public static final String TYPE_DICTIONARY = "dictionary";
     public static final String TYPE_MATRIX = "matrix";
     public static final int KILOBYTE = 1024;
+    public static final int MILLISECONDS = 1000000;
 
-    public static void saveDictionary(Dictionary dictionary, String directory) throws IOException {
-        directory = normalizeAddress(directory);
-        serializeDictionary(dictionary, directory);
-        saveToTextFileDictionary(dictionary, directory);
-        saveToTextFileIncidenceMatrix(dictionary.getIncidenceMatrix(), directory);
-    }
+//    public static void saveToTextFileDictionary(Dictionary dictionary, String directory) throws IOException {
+//        String fileName = generateFileName(directory, TYPE_DICTIONARY, EXTENSION_TXT);
+//        PrintWriter out = new PrintWriter(new BufferedWriter(new java.io.FileWriter(fileName, false)));
+//        out.println("Index:");
+//        for (Map.Entry<String, Integer> entry : dictionary.getDocumentsMap().entrySet())
+//            out.printf("Document name: %s; document index: %s%n", entry.getKey(), entry.getValue());
+//        out.printf("Dictionary size: %s word(s) %n %n", dictionary.getSize());
+//        Map<String, Set<Integer>> index = dictionary.getIndex();
+//        for (String word : dictionary.getWords()) out.printf("%s : %s %n", word, index.get(word));
+//        out.close();
+//
+//        File file = new File(fileName);
+//        System.out.println("Total file size " + Math.round((double) file.length() / KILOBYTE) + " KB");
+//    }
 
-    private static void serializeDictionary(Dictionary dictionary, String directory) throws IOException {
-        String fileName = generateFileName(directory, TYPE_DICTIONARY, EXTENSION_OUT);
-        FileOutputStream fos = new FileOutputStream(fileName);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject(dictionary);
-        oos.flush();
-        oos.close();
-    }
-
-    public static void saveToTextFileDictionary(Dictionary dictionary, String directory) throws IOException {
-        String fileName = generateFileName(directory, TYPE_DICTIONARY, EXTENSION_TXT);
-        PrintWriter out = new PrintWriter(new BufferedWriter(new java.io.FileWriter(fileName, false)));
-        out.println("Index:");
-        for (Map.Entry<String, Integer> entry : dictionary.getDocumentsMap().entrySet())
-            out.printf("Document name: %s; document index: %s%n", entry.getKey(), entry.getValue());
-        out.printf("Dictionary size: %s word(s) %n %n", dictionary.getSize());
-        Map<String, Set<Integer>> index = dictionary.getIndex();
-        for (String word : dictionary.getWords()) out.printf("%s : %s %n", word, index.get(word));
-        out.close();
-
-        File file = new File(fileName);
-        System.out.println("Total file size " + Math.round((double) file.length() / KILOBYTE) + " KB");
-    }
-
-    private static String generateFileName(String directory, String type, String extension) {
+    public static String generateFileName(String directory, String type, String extension) {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_MASK);
         String formattedDate = sdf.format(date);
@@ -60,14 +41,14 @@ public class IOUtils {
         return sb.toString();
     }
 
-    private static String normalizeAddress(String address) {
+    public static String normalizeAddress(String address) {
         if (address.contains("/")) return address.replace("/", File.separator);
         if (address.contains("\\")) return address.replace("\\", File.separator);
         return address;
     }
 
     public static void saveToTextFileIncidenceMatrix(IncidenceMatrix matrix, String directory) throws IOException {
-        String fileName = generateFileName(directory, TYPE_MATRIX, EXTENSION_TXT);
+        String fileName = generateFileName(directory, TYPE_MATRIX, SavableReadable.EXTENSION_TXT);
         Writer fileWriter = new BufferedWriter(new java.io.FileWriter(fileName, false));
         Map<String, Set<Integer>> index = matrix.getIndex();
         Map<String, Integer> documentsMap = matrix.getDocumentsMap();
@@ -98,13 +79,6 @@ public class IOUtils {
             out.format(format.toString(), args);
         }
         out.close();
-    }
-
-    public static Dictionary readDictionaryFromFile(String file) throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream(file);
-        ObjectInputStream oin = new ObjectInputStream(fis);
-        Dictionary dictionary = (Dictionary) oin.readObject();
-        return dictionary;
     }
 
 }
