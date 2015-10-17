@@ -1,48 +1,31 @@
 package com.ak.ir.index;
 
 import com.ak.ir.DocumentsMap;
+import com.ak.ir.IRObject;
+import com.ak.ir.SavableReadable;
 import com.ak.ir.utils.IRUtils;
 
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by olko06141 on 1.10.2015.
  */
-public class IncidenceMatrix implements Serializable {
+public class IncidenceMatrix extends SavableReadable implements Index, IRObject {
 
+    private static final long serialVersionUID = -2728255565587517055L;
     public static final int ZERO = 0;
     public static final int ONE = 1;
     public static final String NOT = "!";
-    private static final long serialVersionUID = -2728255565587517055L;
-    private Map<String, Set<Integer>> index;
-    private Map<String, Integer> documentsMap;
+    public static final String FILE_TYPE = "incidenceMatrix";
     private TreeMap<String, Integer[]> matrix = new TreeMap<>();
 
-    public IncidenceMatrix(InvertedIndex index, DocumentsMap documentsMap) {
-        this.index = index.getIndex();
-        this.documentsMap = documentsMap.getDocumentsMap();
-        for (Map.Entry<String, Set<Integer>> entry : this.index.entrySet()) updateIndex(entry.getKey());
+    public void bulkUpdate(Collection<String> arrayOfWords, int docID) {
+        arrayOfWords.forEach(word -> this.update(word, docID));
     }
 
-    public TreeMap<String, Integer[]> getMatrix() {
-        return new TreeMap<>(matrix);
-    }
-
-    public Map<String, Set<Integer>> getIndex() {
-        return new TreeMap<>(index);
-    }
-
-    public Map<String, Integer> getDocumentsMap() {
-        return new TreeMap<>(documentsMap);
-    }
-
-    private boolean updateIndex(String word) {
+    public boolean update(String word, int docID) {
         if (!matrix.containsKey(word)) {
-            Set<Integer> docIDs = index.get(word);
             Integer[] docArray = new Integer[documentsMap.size()];
             for (int i = 0; i < docArray.length; ++i) {
                 if (docIDs.contains(i + 1)) docArray[i] = ONE;
@@ -69,10 +52,10 @@ public class IncidenceMatrix implements Serializable {
 
     private Integer[] calculateBinaryDocuments(String sentence) {
         String[] words = sentence.split(IRUtils.SPACE_SYMBOL);
-        Integer[] array = invertBitArray(getBitArray(NOT));
+        Integer[] array = bitwiseOperationINVERSE(getBitArray(NOT));
         for (String word : words)
             if (!word.contains(NOT)) array = bitwiseOperationAND(array, getBitArray(word));
-            else array = bitwiseOperationAND(array, invertBitArray(getBitArray(word.replace(NOT, ""))));
+            else array = bitwiseOperationAND(array, bitwiseOperationINVERSE(getBitArray(word.replace(NOT, ""))));
         return array;
     }
 
@@ -92,10 +75,44 @@ public class IncidenceMatrix implements Serializable {
         return result;
     }
 
-    private Integer[] invertBitArray(Integer[] array) {
+    private Integer[] bitwiseOperationINVERSE(Integer[] array) {
         Integer[] result = new Integer[array.length];
         for (int i = 0; i < array.length; ++i) result[i] = array[i].equals(ONE) ? ZERO : ONE;
         return result;
     }
 
+    @Override
+    public void buildIRObject(DocumentsMap documentsMap) throws IOException {
+        for (Map.Entry<String, Integer> entry : documentsMap.getDocumentsMap().entrySet()) {
+            BufferedReader inputStream = new BufferedReader(new InputStreamReader(new FileInputStream(entry.getKey())));
+            String line;
+            while ((line = inputStream.readLine()) != null) {
+                for (String symbol : IRUtils.EXTRA_SYMBOLS) line = line.replace(symbol, IRUtils.SPACE_SYMBOL);
+                Collection<String> collection = new ArrayList(Arrays.asList(line.split(IRUtils.SPACE_SYMBOL)));
+                collection.stream().forEach(IRUtils::normalize);
+                bulkUpdate(collection, entry.getValue());
+            }
+            inputStream.close();
+        }
+    }
+
+    @Override
+    public Set<Integer> findDocumentSet(List<String> sentence) {
+        return null;
+    }
+
+    @Override
+    protected void writeTo(PrintWriter printWriter) {
+
+    }
+
+    @Override
+    protected String getFileType() {
+        return FILE_TYPE;
+    }
+
+    @Override
+    protected IncidenceMatrix readFrom(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        return (IncidenceMatrix) ois.readObject();
+    }
 }

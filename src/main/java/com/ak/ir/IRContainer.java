@@ -4,13 +4,8 @@ import com.ak.ir.dictionary.Dictionary;
 import com.ak.ir.index.IncidenceMatrix;
 import com.ak.ir.index.InvertedIndex;
 import com.ak.ir.utils.IOUtils;
-import com.ak.ir.utils.IRUtils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * Created by olko06141 on 15.10.2015.
@@ -44,10 +39,6 @@ public class IRContainer {
         }
     }
 
-    public void buildIncidenceMatrix() {
-        incidenceMatrix = new IncidenceMatrix(invertedIndex, documentsMap);
-    }
-
     private void buildDocumentsMap(String directory) throws IOException {
         File dir = new File(directory);
         if (!dir.isDirectory()) throw new RuntimeException("There is no such directory '" + dir + "'");
@@ -56,24 +47,14 @@ public class IRContainer {
 
     public void buildIRObjects(String directory) throws IOException {
         buildDocumentsMap(directory);
-        for (Map.Entry<String, Integer> entry : documentsMap.getDocumentsMap().entrySet()) {
-            String fileName = entry.getKey();
-            BufferedReader inputStream = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
-            String line;
-            while ((line = inputStream.readLine()) != null) {
-                for (String symbol : IRUtils.EXTRA_SYMBOLS) line = line.replace(symbol, IRUtils.SPACE_SYMBOL);
-                Collection<String> collection = new ArrayList(Arrays.asList(line.split(IRUtils.SPACE_SYMBOL)));
-                collection.stream().forEach(IRUtils::normalize);
-                dictionary.addArrayOfWords(collection);
-            }
-            inputStream.close();
-        }
+        dictionary.buildIRObject(documentsMap);
+        invertedIndex.buildIRObject(documentsMap);
     }
 
     public void saveIRObjects(String destinationDirectory) throws IOException {
         documentsMap.save(destinationDirectory);
         dictionary.save(destinationDirectory);
-
+        invertedIndex.save(destinationDirectory);
     }
 
 }

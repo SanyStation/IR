@@ -8,6 +8,6 @@ import java.util.Set;
  */
 public interface Index {
 
-    public Set<Integer> findDocumentSet(List<String> sentence);
+    Set<Integer> findDocumentSet(List<String> sentence);
 
 }

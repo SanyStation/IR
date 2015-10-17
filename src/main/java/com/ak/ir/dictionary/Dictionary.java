@@ -1,17 +1,20 @@
 package com.ak.ir.dictionary;
 
+import com.ak.ir.DocumentsMap;
+import com.ak.ir.IRObject;
 import com.ak.ir.SavableReadable;
+import com.ak.ir.utils.IRUtils;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by olko06141 on 20.9.2015.
  */
-public class Dictionary extends SavableReadable {
+public class Dictionary extends SavableReadable implements IRObject {
 
     private static final long serialVersionUID = -6930522145462340882L;
     
@@ -26,11 +29,11 @@ public class Dictionary extends SavableReadable {
         dictionary = newDictionary;
     }
 
-    public void addArrayOfWords(Collection<String> arrayOfWords) {
-        arrayOfWords.forEach(this::addWord);
+    public void bulkUpdate(Collection<String> arrayOfWords) {
+        arrayOfWords.forEach(this::update);
     }
 
-    public boolean addWord(String word) {
+    public boolean update(String word) {
         if (word != null && word.isEmpty()) return false;
         if (!isWordFound(word)) {
             if (position >= dictionary.length) {
@@ -85,5 +88,20 @@ public class Dictionary extends SavableReadable {
     @Override
     protected Dictionary readFrom(ObjectInputStream ois) throws IOException, ClassNotFoundException {
         return (Dictionary) ois.readObject();
+    }
+
+    @Override
+    public void buildIRObject(DocumentsMap documentsMap) throws IOException {
+        for (Map.Entry<String, Integer> entry : documentsMap.getDocumentsMap().entrySet()) {
+            BufferedReader inputStream = new BufferedReader(new InputStreamReader(new FileInputStream(entry.getKey())));
+            String line;
+            while ((line = inputStream.readLine()) != null) {
+                for (String symbol : IRUtils.EXTRA_SYMBOLS) line = line.replace(symbol, IRUtils.SPACE_SYMBOL);
+                Collection<String> collection = new ArrayList(Arrays.asList(line.split(IRUtils.SPACE_SYMBOL)));
+                collection.stream().forEach(IRUtils::normalize);
+                bulkUpdate(collection);
+            }
+            inputStream.close();
+        }
     }
 }

@@ -7,7 +7,7 @@ public class IRUtils {
 
     public static final String[] EXTRA_SYMBOLS = new String[]{
             System.lineSeparator(), ",", "(", ")", "{", "}", "\"", "'", "“", ";",
-            "[", "]", "\t", "—", "!", ".", "#", "&", "?", "|", "//", "--", "*", "\n", "\r"};
+            "[", "]", "\t", "—", "!", ".", "#", "&", "?", "|", "//", "--", "*", "\n", "\r", "..."};
     public static final String SPACE_SYMBOL = " ";
 
     public static String normalize(String word) {
