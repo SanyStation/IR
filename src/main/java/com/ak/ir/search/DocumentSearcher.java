@@ -16,7 +16,8 @@ public class DocumentSearcher {
     }
 
     public Set<String> findDocuments(String sentence) {
-        return matrix.findDocuments(sentence);
+//        return matrix.findDocuments(sentence);
+        return null;
     }
 
 }

@@ -50,37 +50,37 @@ public class IOUtils {
     }
 
     public static void saveToTextFileIncidenceMatrix(IncidenceMatrix matrix, String directory) throws IOException {
-        String fileName = generateFileName(directory, TYPE_MATRIX, SavableReadable.EXTENSION_TXT);
-        Writer fileWriter = new BufferedWriter(new java.io.FileWriter(fileName, false));
-        Map<String, Set<Integer>> index = matrix.getIndex();
-        Map<String, Integer> documentsMap = matrix.getDocumentsMap();
-        PrintWriter out = new PrintWriter(fileWriter);
-        out.println("Index:");
-        for (Map.Entry<String, Integer> entry : documentsMap.entrySet())
-            out.printf("Document name: %s; document index: %s%n", entry.getKey(), entry.getValue());
-        StringBuilder format = new StringBuilder();
-        format.append("%1$20s |");
-        int i = 1;
-        Object[] docs = new Object[documentsMap.size() + 1];
-        Object[] args = new Object[documentsMap.size() + 1];
-        for (Map.Entry<String, Integer> entry : documentsMap.entrySet()) {
-            docs[i] = entry.getValue();
-            format.append(" %").append(++i).append("$5s |");
-        }
-        docs[0] = "word \\ document";
-        out.format(format.append('\n').toString(), docs);
-        for (Map.Entry<String, Set<Integer>> entry : index.entrySet()) {
-            args[0] = entry.getKey();
-            for (int j = 1; j < documentsMap.size() + 1; ++j) {
-                if (entry.getValue().contains(docs[j])) {
-                    args[j] = 1;
-                } else {
-                    args[j] = 0;
-                }
-            }
-            out.format(format.toString(), args);
-        }
-        out.close();
+//        String fileName = generateFileName(directory, TYPE_MATRIX, SavableReadable.EXTENSION_TXT);
+//        Writer fileWriter = new BufferedWriter(new java.io.FileWriter(fileName, false));
+//        Map<String, Set<Integer>> index = matrix.getIndex();
+//        Map<String, Integer> documentsMap = matrix.getDocumentsMap();
+//        PrintWriter out = new PrintWriter(fileWriter);
+//        out.println("Index:");
+//        for (Map.Entry<String, Integer> entry : documentsMap.entrySet())
+//            out.printf("Document name: %s; document index: %s%n", entry.getKey(), entry.getValue());
+//        StringBuilder format = new StringBuilder();
+//        format.append("%1$20s |");
+//        int i = 1;
+//        Object[] docs = new Object[documentsMap.size() + 1];
+//        Object[] args = new Object[documentsMap.size() + 1];
+//        for (Map.Entry<String, Integer> entry : documentsMap.entrySet()) {
+//            docs[i] = entry.getValue();
+//            format.append(" %").append(++i).append("$5s |");
+//        }
+//        docs[0] = "word \\ document";
+//        out.format(format.append('\n').toString(), docs);
+//        for (Map.Entry<String, Set<Integer>> entry : index.entrySet()) {
+//            args[0] = entry.getKey();
+//            for (int j = 1; j < documentsMap.size() + 1; ++j) {
+//                if (entry.getValue().contains(docs[j])) {
+//                    args[j] = 1;
+//                } else {
+//                    args[j] = 0;
+//                }
+//            }
+//            out.format(format.toString(), args);
+//        }
+//        out.close();
     }
 
 }

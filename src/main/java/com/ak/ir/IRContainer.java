@@ -12,10 +12,10 @@ import java.io.*;
  */
 public class IRContainer {
 
-    private IncidenceMatrix incidenceMatrix;
     private Dictionary dictionary = new Dictionary();
     private DocumentsMap documentsMap = new DocumentsMap();
     private InvertedIndex invertedIndex = new InvertedIndex();
+    private IncidenceMatrix incidenceMatrix = new IncidenceMatrix();
 
     public static void main(String[] args) throws IOException {
         IRContainer irFacade = new IRContainer();
@@ -49,12 +49,14 @@ public class IRContainer {
         buildDocumentsMap(directory);
         dictionary.buildIRObject(documentsMap);
         invertedIndex.buildIRObject(documentsMap);
+        incidenceMatrix.buildIRObject(documentsMap);
     }
 
     public void saveIRObjects(String destinationDirectory) throws IOException {
         documentsMap.save(destinationDirectory);
         dictionary.save(destinationDirectory);
         invertedIndex.save(destinationDirectory);
+        incidenceMatrix.save(destinationDirectory);
     }
 
 }

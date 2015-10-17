@@ -18,6 +18,7 @@ public class IncidenceMatrix extends SavableReadable implements Index, IRObject 
     public static final int ONE = 1;
     public static final String NOT = "!";
     public static final String FILE_TYPE = "incidenceMatrix";
+    private Map<String, Integer> docMap;
     private TreeMap<String, Integer[]> matrix = new TreeMap<>();
 
     public void bulkUpdate(Collection<String> arrayOfWords, int docID) {
@@ -25,28 +26,33 @@ public class IncidenceMatrix extends SavableReadable implements Index, IRObject 
     }
 
     public boolean update(String word, int docID) {
-        if (!matrix.containsKey(word)) {
-            Integer[] docArray = new Integer[documentsMap.size()];
-            for (int i = 0; i < docArray.length; ++i) {
-                if (docIDs.contains(i + 1)) docArray[i] = ONE;
-                else docArray[i] = ZERO;
-            }
+        int pos = docID - 1;
+        Integer[] docArray = matrix.get(word);
+        if (docArray == null) {
+            docArray = new Integer[docMap.size()];
+            docArray[pos] = ONE;
             matrix.put(word, docArray);
             return true;
-        } else
-            return false;
+        } else {
+            System.out.println(Arrays.toString(docArray));
+            if (docArray[pos] == ZERO) {
+                docArray[pos] = ONE;
+                return true;
+            } else return false;
+        }
     }
 
-    public Set<String> findDocuments(String sentence) {
-        Set<String> documents = new TreeSet<>();
-        Integer[] docArray = calculateBinaryDocuments(sentence);
-        for (int i = 0; i < docArray.length; ++i) {
-            if (docArray[i].equals(ONE)) {
-                for (Map.Entry<String, Integer> entry : documentsMap.entrySet()) {
-                    if (entry.getValue().equals(i + 1)) documents.add(entry.getKey());
-                }
-            }
-        }
+    @Override
+    public Set<Integer> findDocumentSet(List<String> sentence) {
+        Set<Integer> documents = new TreeSet<>();
+//        Integer[] docArray = calculateBinaryDocuments(sentence);
+//        for (int i = 0; i < docArray.length; ++i) {
+//            if (docArray[i].equals(ONE)) {
+//                for (Map.Entry<String, Integer> entry : docMap.entrySet()) {
+//                    if (entry.getValue().equals(i + 1)) documents.add(entry.getKey());
+//                }
+//            }
+//        }
         return documents;
     }
 
@@ -61,7 +67,7 @@ public class IncidenceMatrix extends SavableReadable implements Index, IRObject 
 
     private Integer[] bitwiseOperationAND(Integer[] array1, Integer[] array2) {
         if (array1.length != array2.length)
-            throw new IllegalArgumentException("[Dictionary] The arrays have to have the same length. " +
+            throw new IllegalArgumentException("[IncidenceMatrix] The arrays have to have the same length. " +
                     "But array1 length is " + array1.length + " and array2 length is " + array2.length);
         Integer[] result = new Integer[array1.length];
         for (int i = 0; i < array1.length; ++i) result[i] = array1[i] * array2[i];
@@ -69,7 +75,7 @@ public class IncidenceMatrix extends SavableReadable implements Index, IRObject 
     }
 
     private Integer[] getBitArray(String word) {
-        Integer[] result = new Integer[documentsMap.size()];
+        Integer[] result = new Integer[docMap.size()];
         if (matrix.containsKey(word)) result = matrix.get(word);
         else for (int i = 0; i < result.length; ++i) result[i] = ZERO;
         return result;
@@ -83,7 +89,8 @@ public class IncidenceMatrix extends SavableReadable implements Index, IRObject 
 
     @Override
     public void buildIRObject(DocumentsMap documentsMap) throws IOException {
-        for (Map.Entry<String, Integer> entry : documentsMap.getDocumentsMap().entrySet()) {
+        docMap = documentsMap.getDocumentsMap();
+        for (Map.Entry<String, Integer> entry : docMap.entrySet()) {
             BufferedReader inputStream = new BufferedReader(new InputStreamReader(new FileInputStream(entry.getKey())));
             String line;
             while ((line = inputStream.readLine()) != null) {
@@ -97,13 +104,25 @@ public class IncidenceMatrix extends SavableReadable implements Index, IRObject 
     }
 
     @Override
-    public Set<Integer> findDocumentSet(List<String> sentence) {
-        return null;
-    }
-
-    @Override
     protected void writeTo(PrintWriter printWriter) {
-
+        StringBuilder format = new StringBuilder();
+        format.append("%1$20s |");
+        int i = 1;
+        Object[] docs = new Object[docMap.size() + 1];
+        Object[] args = new Object[docMap.size() + 1];
+        for (Map.Entry<String, Integer> entry : docMap.entrySet()) {
+            docs[i] = entry.getValue();
+            format.append(" %").append(++i).append("$5s |");
+        }
+        docs[0] = "word \\ document";
+        printWriter.format(format.append('\n').toString(), docs);
+        for (Map.Entry<String, Integer[]> entry : matrix.entrySet()) {
+            args[0] = entry.getKey();
+            Integer[] docArray = entry.getValue();
+            for (int j = 0; j < docArray.length; ++j) args[j + 1] = docArray[j] == ONE ? ONE : ZERO;
+            printWriter.format(format.toString(), args);
+        }
+        printWriter.close();
     }
 
     @Override
