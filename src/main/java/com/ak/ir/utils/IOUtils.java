@@ -49,6 +49,11 @@ public class IOUtils {
         return address;
     }
 
+    public static String cutFileExtension(String fileName) {
+        if (fileName != null) return fileName.substring(0, fileName.lastIndexOf('.'));
+        else return "";
+    }
+
     public static void saveToTextFileIncidenceMatrix(IncidenceMatrix matrix, String directory) throws IOException {
 //        String fileName = generateFileName(directory, TYPE_MATRIX, SavableReadable.EXTENSION_TXT);
 //        Writer fileWriter = new BufferedWriter(new java.io.FileWriter(fileName, false));

@@ -1,7 +1,5 @@
 package com.ak.ir;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +11,7 @@ import java.util.TreeMap;
 public class DocumentsMap extends SavableReadable {
 
     private static final long serialVersionUID = 4875130577590892949L;
+
     protected String fileType = "docmap";
     private Map<String, Integer> map = new TreeMap<>();
 
@@ -47,10 +46,5 @@ public class DocumentsMap extends SavableReadable {
     @Override
     protected String getFileType() {
         return fileType;
-    }
-
-    @Override
-    protected DocumentsMap readFrom(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        return (DocumentsMap) ois.readObject();
     }
 }

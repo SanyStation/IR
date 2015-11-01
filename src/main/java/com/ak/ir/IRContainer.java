@@ -3,6 +3,7 @@ package com.ak.ir;
 import com.ak.ir.dictionary.Dictionary;
 import com.ak.ir.index.IncidenceMatrix;
 import com.ak.ir.index.InvertedIndex;
+import com.ak.ir.index.ZoneIndex;
 import com.ak.ir.utils.IOUtils;
 
 import java.io.*;
@@ -12,6 +13,7 @@ import java.io.*;
  */
 public class IRContainer {
 
+    private ZoneIndex zoneIndex = new ZoneIndex();
     private Dictionary dictionary = new Dictionary();
     private DocumentsMap documentsMap = new DocumentsMap();
     private InvertedIndex invertedIndex = new InvertedIndex();
@@ -47,16 +49,18 @@ public class IRContainer {
 
     public void buildIRObjects(String directory) throws IOException {
         buildDocumentsMap(directory);
-        dictionary.buildIRObject(documentsMap);
-        invertedIndex.buildIRObject(documentsMap);
-        incidenceMatrix.buildIRObject(documentsMap);
+        zoneIndex.buildIRObject(documentsMap);
+//        dictionary.buildIRObject(documentsMap);
+//        invertedIndex.buildIRObject(documentsMap);
+//        incidenceMatrix.buildIRObject(documentsMap);
     }
 
     public void saveIRObjects(String destinationDirectory) throws IOException {
         documentsMap.save(destinationDirectory);
-        dictionary.save(destinationDirectory);
-        invertedIndex.save(destinationDirectory);
-        incidenceMatrix.save(destinationDirectory);
+        zoneIndex.save(destinationDirectory);
+//        dictionary.save(destinationDirectory);
+//        invertedIndex.save(destinationDirectory);
+//        incidenceMatrix.save(destinationDirectory);
     }
 
 }

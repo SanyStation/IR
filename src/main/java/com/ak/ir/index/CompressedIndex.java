@@ -5,8 +5,6 @@ package com.ak.ir.index;
  */
 public class CompressedIndex {
 
-
-
     char[] words;
 
 

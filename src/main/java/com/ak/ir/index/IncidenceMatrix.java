@@ -129,9 +129,4 @@ public class IncidenceMatrix extends SavableReadable implements Index, IRObject 
     protected String getFileType() {
         return FILE_TYPE;
     }
-
-    @Override
-    protected IncidenceMatrix readFrom(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        return (IncidenceMatrix) ois.readObject();
-    }
 }

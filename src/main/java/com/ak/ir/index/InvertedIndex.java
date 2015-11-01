@@ -16,6 +16,7 @@ public class InvertedIndex extends SavableReadable implements Index, IRObject {
     private static final long serialVersionUID = 3976755596080851301L;
 
     public static final String FILE_TYPE = "invertedIndex";
+
     private Map<String, Set<Integer>> index = new TreeMap<>();
 
     public void bulkUpdate(Collection<String> arrayOfWords, int docID) {
@@ -65,11 +66,6 @@ public class InvertedIndex extends SavableReadable implements Index, IRObject {
     @Override
     protected String getFileType() {
         return FILE_TYPE;
-    }
-
-    @Override
-    protected InvertedIndex readFrom(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        return (InvertedIndex) ois.readObject();
     }
 
     @Override

@@ -86,11 +86,6 @@ public class Dictionary extends SavableReadable implements IRObject {
     }
 
     @Override
-    protected Dictionary readFrom(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        return (Dictionary) ois.readObject();
-    }
-
-    @Override
     public void buildIRObject(DocumentsMap documentsMap) throws IOException {
         for (Map.Entry<String, Integer> entry : documentsMap.getDocumentsMap().entrySet()) {
             BufferedReader inputStream = new BufferedReader(new InputStreamReader(new FileInputStream(entry.getKey())));

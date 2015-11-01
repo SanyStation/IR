@@ -43,9 +43,4 @@ public class BiwordIndex extends SavableReadable implements Index {
     protected String getFileType() {
         return null;
     }
-
-    @Override
-    protected Object readFrom(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        return null;
-    }
 }
