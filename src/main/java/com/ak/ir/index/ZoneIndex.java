@@ -70,8 +70,21 @@ public class ZoneIndex extends SavableReadable implements Index, IRObject {
     }
 
     @Override
-    public Set<Integer> findDocumentSet(List<String> sentence) {
-        return null;
+    public List<Integer> findDocumentSet(List<String> sentence) {
+        Map<Integer, Double> docTotalWeight = new TreeMap();
+        for (String word : sentence) {
+            for (Map.Entry<Integer, Set<Zone>> entry : index.get(word).entrySet()) {
+                double sum = 0.0;
+                for(Zone zone : entry.getValue()) sum += zone.getWeight();
+                Double docWeight = docTotalWeight.get(entry.getKey());
+                if (docWeight == null) docTotalWeight.put(entry.getKey(), sum);
+                else docTotalWeight.put(entry.getKey(), docWeight + sum);
+            }
+        }
+        IRUtils.sortByValues(docTotalWeight);
+        List<Integer> docs = new ArrayList();
+        docs.addAll(docTotalWeight.keySet());
+        return docs;
     }
 
     @Override

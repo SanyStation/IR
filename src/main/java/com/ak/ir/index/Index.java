@@ -1,5 +1,6 @@
 package com.ak.ir.index;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -8,6 +9,6 @@ import java.util.Set;
  */
 public interface Index {
 
-    Set<Integer> findDocumentSet(List<String> sentence);
+    Collection<Integer> findDocumentSet(List<String> sentence);
 
 }
