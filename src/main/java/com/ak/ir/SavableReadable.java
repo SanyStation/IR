@@ -47,11 +47,6 @@ public abstract class SavableReadable implements Serializable {
 
     public Object read(String file) throws IOException, ClassNotFoundException {
         ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
-        Object object = readFrom(ois);
-        return object;
-    }
-
-    public static Object readFrom(ObjectInputStream ois) throws IOException, ClassNotFoundException {
         return ois.readObject();
     }
 }
