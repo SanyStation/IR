@@ -1,17 +1,14 @@
 package com.ak.ir.fuzzy;
 
-import com.ak.ir.DocumentsMap;
-import com.ak.ir.IRObject;
-import com.ak.ir.SavableReadable;
-
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Created by sanystation on 07/11/15.
  */
-public class PrefixSuffixTree extends SavableReadable implements IRObject {
+public class PrefixSuffixTree extends FuzzyIndex {
 
     private static final long serialVersionUID = 395181853583756999L;
 
@@ -20,7 +17,9 @@ public class PrefixSuffixTree extends SavableReadable implements IRObject {
     private Map<String, Set<String>> prefixTree = new TreeMap();
     private Map<String, Set<String>> suffixTree = new TreeMap();
 
+    @Override
     public void update(String word) {
+        if (word == null) return;
         for (int i = 1; i <= word.length(); ++i) updateTree(word, word.substring(0, i), prefixTree);
         for (int i = word.length() - 1; i >= 0; --i) updateTree(word, word.substring(i, word.length()), suffixTree);
     }
@@ -35,35 +34,27 @@ public class PrefixSuffixTree extends SavableReadable implements IRObject {
         }
     }
 
-    public static void main(String[] args) {
-        PrefixSuffixTree pfTree = new PrefixSuffixTree();
-        pfTree.update("ragul");
-        pfTree.update("ragal");
-        System.out.println(pfTree.findWords("rag*l"));
-    }
-
+    @Override
     public Set<String> findWords(String pattern) {
         Set<String> resultSet = new HashSet();
-        if (!pattern.contains("\\*") && pattern.contains("*")) {
+        if (pattern.contains("*")) {
             String[] words = pattern.split("\\*");
-            if (words.length == 2) {
+            if (words.length >= 2) {
                 Set<String> pSet = prefixTree.get(words[0]);
-                Set<String> sSet = suffixTree.get(words[1]);
+                Set<String> sSet = suffixTree.get(words[words.length - 1]);
                 resultSet.addAll(pSet != null ? pSet : new HashSet());
                 resultSet.retainAll(sSet != null ? sSet : new HashSet());
+                for (int i = 1; i < words.length - 1; ++i) {
+                    String subWord = words[i];
+                    resultSet = resultSet.stream().filter(word -> word.contains(subWord)).collect(Collectors.toSet());
+                }
             } else if (words.length == 1) resultSet.addAll(prefixTree.get(words[0]));
         } else if (!pattern.isEmpty()) resultSet.addAll(prefixTree.get(pattern));
         return resultSet;
     }
 
     @Override
-    public void buildIRObject(DocumentsMap documentsMap) throws IOException {
-
-    }
-
-    @Override
     protected void writeTo(PrintWriter printWriter) {
-
     }
 
     @Override
