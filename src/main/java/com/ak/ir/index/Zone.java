@@ -5,7 +5,7 @@ package com.ak.ir.index;
  */
 public enum Zone {
 
-    TITLE(0.3), BODY(0.7);
+    TITLE(0.2), BODY(0.5), AUTHOR(0.2), GENRE(0.05), KEYWORDS(0.05);
 
     private double weight;
 
