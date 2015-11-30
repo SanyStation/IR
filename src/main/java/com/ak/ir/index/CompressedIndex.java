@@ -8,4 +8,6 @@ public class CompressedIndex {
     char[] words;
 
 
+
+
 }
